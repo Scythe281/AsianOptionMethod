@@ -25,6 +25,8 @@ int numberObservation;
 
 int numberSimulations;
 
+std::string optionType; 
+
 
 std::cout << "Stock Price: ";
 std::cin >> stockPrice; 
@@ -50,7 +52,10 @@ std::cin >> numberObservation;
 std::cout << "Number of Simulations: ";
 std::cin >> numberSimulations; 
 
-asianOptionMethod option (stockPrice, strikePrice, interestRate, volatility, time, timeFrame, numberObservation, numberSimulations);
+std::cout << "Type of option (Call/Put): ";
+std::cin >> optionType;
+
+asianOptionMethod option (stockPrice, strikePrice, interestRate, volatility, time, timeFrame, numberObservation, numberSimulations, optionType);
 
 double optionPrice = option.runAndPriceOption();
 option.saveToCSV("monte_carlo_paths.csv");
