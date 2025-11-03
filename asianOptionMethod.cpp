@@ -25,14 +25,14 @@ private:
     double time; 
     std::string timeFrame;
 
+    std::string optionType;
+
     std::vector<std::vector<double>> allPaths;
 
     int numberObservation; 
-   // std::string observationFrame;
 
     int numberSimulations;
 
-    // Helper functions (now private since only used internally)
     double convertToYears(double time, const std::string& timeFrame) {
         if (timeFrame == "Weeks" || timeFrame == "Week") {
             return time / 52.0;
@@ -52,8 +52,8 @@ private:
 
 public: 
 
-    asianOptionMethod(double sP, double stP, double iR, double vol, double t, std::string tf, int numObs, int sim)
-    : stockPrice(sP), strikePrice(stP), interestRate(iR), volatility(vol), numberObservation(numObs), numberSimulations(sim), rd(), gen(rd()), normal(0.0,1.0) {
+    asianOptionMethod(double sP, double stP, double iR, double vol, double t, std::string tf, int numObs, int sim, std::string typeOfOption)
+     : stockPrice(sP), strikePrice(stP), interestRate(iR), volatility(vol), numberObservation(numObs), numberSimulations(sim), optionType(typeOfOption), rd(), gen(rd()), normal(0.0,1.0) {
         time = convertToYears(t, tf);
       }
 
@@ -82,10 +82,14 @@ public:
     return averagePrice;
     }
 
-// only for calls right now, for puts need extra parameter of call/put + braching if-else statements
-    double calculatePayoff (double avgPrice) {
-      
-        double payoff = std::max(avgPrice - strikePrice, 0.0);
+     double calculatePayoff (double avgPrice) {
+        double payoff = 0.0;
+        if (optionType == "Call") {
+         payoff = std::max(avgPrice - strikePrice, 0.0);
+        }
+        else if (optionType == "Put") {
+            payoff = std::max(strikePrice - avgPrice, 0.0);
+        }
 
         return payoff;
     }
